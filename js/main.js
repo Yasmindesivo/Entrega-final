@@ -128,3 +128,148 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 });
+
+// Seleccionar productos de todas las categorías
+function agregaraTodos() {
+    // Seleccionar todas las secciones de categorías
+    const categorias = ["#remeras", "#pantalones", "#peluches", "#Piyamas"];
+    const Todos = document.querySelector("#todos");
+
+    if (!Todos) {
+        console.error("No se encontró la sección #todos en el HTML.");
+        return;
+    }
+
+    // Recorremos las categorías y sus productos
+    categorias.forEach((categoriaId) => {
+        const categoria = document.querySelector(categoriaId);
+        if (categoria) {
+            const productos = categoria.querySelectorAll(".card");
+
+            productos.forEach((producto) => {
+                // Clonamos cada tarjeta para no modificar el original
+                const tarjetaClonada = producto.cloneNode(true);
+
+                // Añadimos la tarjeta clonada a la sección de más vendidos
+                Todos.appendChild(tarjetaClonada);
+            });
+        } else {
+            console.warn(`No se encontró la categoría ${categoriaId} en el HTML.`);
+        }
+    });
+}
+
+// Llamar a la función después de cargar el DOM
+document.addEventListener("DOMContentLoaded", () => {
+    agregaraTodos();
+});
+
+// Inicializar el contador del carrito
+let contadorCarrito = 0;
+
+// Función para actualizar el contador del carrito
+function actualizarContadorCarrito() {
+    // Seleccionar los contadores en ambos carritos (normal y pequeño)
+    const carritoContador = document.querySelector("#carrito-contador");
+    const carritoContadorPequeno = document.querySelector("#carrito-contador-pequeno");
+
+    // Actualizar los valores con el contador actual
+    if (carritoContador) carritoContador.textContent = contadorCarrito;
+    if (carritoContadorPequeno) carritoContadorPequeno.textContent = contadorCarrito;
+}
+
+// Función para manejar la acción de "Comprar"
+function activarBotonesComprar() {
+    // Seleccionar todos los botones "Comprar"
+    const botonesComprar = document.querySelectorAll(".btn.btn-primary");
+
+    if (botonesComprar.length === 0) {
+        console.warn("No se encontraron botones 'Comprar' en las tarjetas.");
+        return;
+    }
+
+    // Añadir evento de clic a cada botón
+    botonesComprar.forEach((boton) => {
+        boton.addEventListener("click", (e) => {
+            e.preventDefault(); // Evita comportamiento predeterminado si es un enlace
+            e.stopPropagation(); // Evita que el clic en "Comprar" dispare otros eventos como abrir el modal
+
+            // Incrementar el contador del carrito
+            contadorCarrito++;
+
+            // Actualizar visualmente el contador del carrito
+            actualizarContadorCarrito();
+
+            console.log("Producto añadido al carrito. Total productos:", contadorCarrito);
+        });
+    });
+}
+
+// Función principal para activar eventos en las tarjetas
+function activarDescripcionAmpliada() {
+    console.log("Activando eventos en las tarjetas...");
+    const productos = document.querySelectorAll(".card"); // Selecciona todas las tarjetas
+
+    if (productos.length === 0) {
+        console.error("No se encontraron productos en la página.");
+    }
+
+    productos.forEach((producto, index) => {
+        console.log(`Tarjeta encontrada en el índice ${index}:`, producto);
+
+        producto.addEventListener("click", () => {
+            // Obtener el nombre y el precio del producto
+            const nombreProducto = producto.querySelector(".card-title")?.innerText.trim() || "Nombre no disponible";
+            const precioProducto = producto.querySelector(".card-text")?.innerText.trim() || "Precio no disponible";
+
+            // Mostrar el modal con la información del producto
+            mostrarModal(nombreProducto, precioProducto);
+        });
+    });
+}
+
+// Función para mostrar el modal
+function mostrarModal(nombre, precio) {
+    console.log("Intentando mostrar el modal...");
+
+    const modal = document.getElementById("modalProducto");
+    const modalTitle = document.getElementById("modal-title");
+    const modalDescription = document.getElementById("modal-description");
+
+    // Verificar si los elementos del modal existen
+    if (!modal) {
+        console.error("El modal no se encontró en el DOM.");
+        return;
+    }
+
+    if (!modalTitle || !modalDescription) {
+        console.error("Faltan elementos dentro del modal.");
+        return;
+    }
+
+    // Asignar valores al modal
+    modalTitle.innerText = `Nombre: ${nombre}`;
+    modalDescription.innerText = `Precio: ${precio}\n¡Vístete con el encanto de Hello Kitty y sus amigos!`;
+
+    // Mostrar el modal
+    modal.style.display = "block";
+    console.log("Modal mostrado con éxito.");
+}
+
+// Función para cerrar el modal
+function cerrarModal() {
+    const modal = document.getElementById("modalProducto");
+    if (!modal) {
+        console.error("No se pudo cerrar el modal porque no existe.");
+        return;
+    }
+    modal.style.display = "none";
+    console.log("Modal cerrado.");
+}
+
+// Ejecutar las funciones al cargar el DOM
+document.addEventListener("DOMContentLoaded", () => {
+    activarDescripcionAmpliada();
+    activarBotonesComprar();
+    actualizarContadorCarrito();
+});
