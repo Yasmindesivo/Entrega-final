@@ -164,112 +164,294 @@ document.addEventListener("DOMContentLoaded", () => {
     agregaraTodos();
 });
 
-// Inicializar el contador del carrito
-let contadorCarrito = 0;
+
+//////////////////////
+
+// Inicializar el carrito y el contador desde localStorage
+let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+let contadorCarrito = carrito.reduce((acc, prod) => acc + prod.cantidad, 0);
 
 // Función para actualizar el contador del carrito
 function actualizarContadorCarrito() {
-    // Seleccionar los contadores en ambos carritos (normal y pequeño)
     const carritoContador = document.querySelector("#carrito-contador");
     const carritoContadorPequeno = document.querySelector("#carrito-contador-pequeno");
 
-    // Actualizar los valores con el contador actual
     if (carritoContador) carritoContador.textContent = contadorCarrito;
     if (carritoContadorPequeno) carritoContadorPequeno.textContent = contadorCarrito;
+
+    // Guardar el carrito en localStorage
+    localStorage.setItem("carrito", JSON.stringify(carrito));
 }
 
 // Función para manejar la acción de "Comprar"
 function activarBotonesComprar() {
-    // Seleccionar todos los botones "Comprar"
     const botonesComprar = document.querySelectorAll(".btn.btn-primary");
 
-    if (botonesComprar.length === 0) {
-        console.warn("No se encontraron botones 'Comprar' en las tarjetas.");
-        return;
-    }
-
-    // Añadir evento de clic a cada botón
     botonesComprar.forEach((boton) => {
         boton.addEventListener("click", (e) => {
-            e.preventDefault(); // Evita comportamiento predeterminado si es un enlace
-            e.stopPropagation(); // Evita que el clic en "Comprar" dispare otros eventos como abrir el modal
+            e.preventDefault();
+            e.stopPropagation();
 
-            // Incrementar el contador del carrito
-            contadorCarrito++;
+            const card = boton.closest(".card");
+            const nombre = card.querySelector(".card-title")?.innerText.trim();
+            const precio = parseFloat(card.querySelector(".card-text")?.innerText.replace("$", "").trim());
 
-            // Actualizar visualmente el contador del carrito
-            actualizarContadorCarrito();
+            if (!nombre || isNaN(precio)) {
+                console.error("Error al obtener datos del producto:", { nombre, precio });
+                return;
+            }
 
-            console.log("Producto añadido al carrito. Total productos:", contadorCarrito);
+            agregarAlCarrito(nombre, precio);
         });
     });
 }
 
-// Función principal para activar eventos en las tarjetas
-function activarDescripcionAmpliada() {
-    console.log("Activando eventos en las tarjetas...");
-    const productos = document.querySelectorAll(".card"); // Selecciona todas las tarjetas
+// Función para agregar un producto al carrito
+function agregarAlCarrito(nombre, precio) {
+    const productoExistente = carrito.find((prod) => prod.nombre === nombre);
 
-    if (productos.length === 0) {
-        console.error("No se encontraron productos en la página.");
+    if (productoExistente) {
+        productoExistente.cantidad++;
+    } else {
+        carrito.push({ nombre, precio, cantidad: 1 });
     }
 
-    productos.forEach((producto, index) => {
-        console.log(`Tarjeta encontrada en el índice ${index}:`, producto);
-
-        producto.addEventListener("click", () => {
-            // Obtener el nombre y el precio del producto
-            const nombreProducto = producto.querySelector(".card-title")?.innerText.trim() || "Nombre no disponible";
-            const precioProducto = producto.querySelector(".card-text")?.innerText.trim() || "Precio no disponible";
-
-            // Mostrar el modal con la información del producto
-            mostrarModal(nombreProducto, precioProducto);
-        });
-    });
+    contadorCarrito++;
+    actualizarContadorCarrito();
 }
 
-// Función para mostrar el modal
-function mostrarModal(nombre, precio) {
-    console.log("Intentando mostrar el modal...");
+// Función para mostrar el modal del carrito
+function mostrarCarrito() {
+    const modalCarrito = document.getElementById("modalCarrito");
+    const tablaCarrito = document.getElementById("tabla-carrito");
+    const totalCarrito = document.getElementById("total-carrito");
 
-    const modal = document.getElementById("modalProducto");
-    const modalTitle = document.getElementById("modal-title");
-    const modalDescription = document.getElementById("modal-description");
-
-    // Verificar si los elementos del modal existen
-    if (!modal) {
-        console.error("El modal no se encontró en el DOM.");
+    if (!tablaCarrito || !totalCarrito) {
+        console.error("El elemento #tabla-carrito o #total-carrito no existe.");
         return;
     }
 
-    if (!modalTitle || !modalDescription) {
-        console.error("Faltan elementos dentro del modal.");
+    // Limpiar la tabla
+    tablaCarrito.innerHTML = "";
+
+    // Verificar si el carrito está vacío
+    if (carrito.length === 0) {
+        tablaCarrito.innerHTML = "<tr><td colspan='4'>El carrito está vacío.</td></tr>";
+        totalCarrito.textContent = "$0.00";
         return;
     }
 
-    // Asignar valores al modal
-    modalTitle.innerText = `Nombre: ${nombre}`;
-    modalDescription.innerText = `Precio: ${precio}\n¡Vístete con el encanto de Hello Kitty y sus amigos!`;
+    // Llenar la tabla con los productos del carrito
+    carrito.forEach((producto, index) => {
+        const fila = document.createElement("tr");
+        fila.innerHTML = `
+            <td>${producto.nombre}</td>
+            <td>$${producto.precio.toFixed(2)}</td>
+            <td>
+                <button onclick="modificarCantidad(${index}, -1)">-</button>
+                ${producto.cantidad}
+                <button onclick="modificarCantidad(${index}, 1)">+</button>
+            </td>
+            <td>$${(producto.precio * producto.cantidad).toFixed(2)}</td>
+        `;
+        tablaCarrito.appendChild(fila);
+    });
+
+    // Calcular el total
+    const total = carrito.reduce((acc, prod) => acc + prod.precio * prod.cantidad, 0);
+    console.log("Total calculado:", total); // Depuración
+    totalCarrito.textContent = `$${total.toFixed(2)}`;
 
     // Mostrar el modal
-    modal.style.display = "block";
-    console.log("Modal mostrado con éxito.");
+    modalCarrito.style.display = "block";
 }
 
-// Función para cerrar el modal
-function cerrarModal() {
-    const modal = document.getElementById("modalProducto");
-    if (!modal) {
-        console.error("No se pudo cerrar el modal porque no existe.");
-        return;
+// Función para modificar la cantidad de un producto
+function modificarCantidad(index, cantidad) {
+    carrito[index].cantidad += cantidad;
+
+    if (carrito[index].cantidad <= 0) {
+        carrito.splice(index, 1);
     }
-    modal.style.display = "none";
-    console.log("Modal cerrado.");
+
+    contadorCarrito = carrito.reduce((acc, prod) => acc + prod.cantidad, 0);
+    actualizarContadorCarrito();
+    mostrarCarrito();
 }
 
-// Ejecutar las funciones al cargar el DOM
+// Función para vaciar el carrito
+function vaciarCarrito() {
+    carrito = [];
+    contadorCarrito = 0;
+    actualizarContadorCarrito();
+    mostrarCarrito();
+}
+
+// Función para cerrar el modal del carrito
+function cerrarCarrito() {
+    const modalCarrito = document.getElementById("modalCarrito");
+    modalCarrito.style.display = "none";
+}
+
+// Ejecutar funciones al cargar el DOM
 document.addEventListener("DOMContentLoaded", () => {
-    activarDescripcionAmpliada();
     activarBotonesComprar();
     actualizarContadorCarrito();
+
+    const carritoIconGrande = document.querySelector(".carrito-icon");
+    const carritoIconPequeno = document.querySelector(".carrito-icon-pequeno");
+
+    if (carritoIconGrande) {
+        carritoIconGrande.addEventListener("click", mostrarCarrito);
+    }
+
+    if (carritoIconPequeno) {
+        carritoIconPequeno.addEventListener("click", mostrarCarrito);
+    }
+
+    document.getElementById("vaciar-carrito").addEventListener("click", vaciarCarrito);
+    document.getElementById("cerrar-carrito").addEventListener("click", cerrarCarrito);
+});
+
+
+
+
+// Función para mostrar el modal de pago
+function mostrarModalPago() {
+    if (carrito.length === 0) {
+        mostrarModalCarritoVacio(); // Mostrar mensaje de carrito vacío
+        return;
+    }
+
+    const modalPago = document.getElementById("modalPago");
+    const totalPago = document.getElementById("total-pago");
+
+    // Calcular el total a pagar
+    const total = carrito.reduce((acc, prod) => acc + prod.precio * prod.cantidad, 0);
+    totalPago.textContent = `$${total.toFixed(2)}`;
+
+    // Mostrar el modal
+    modalPago.style.display = "block";
+}
+
+// Función para mostrar el modal de carrito vacío
+function mostrarModalCarritoVacio() {
+    const modalCarritoVacio = document.getElementById("modalCarritoVacio");
+    modalCarritoVacio.style.display = "block";
+}
+
+// Función para cerrar el modal de carrito vacío
+function cerrarModalCarritoVacio() {
+    const modalCarritoVacio = document.getElementById("modalCarritoVacio");
+    modalCarritoVacio.style.display = "none";
+}
+
+// Función para cerrar el modal de pago
+function cerrarModalPago() {
+    const modalPago = document.getElementById("modalPago");
+    modalPago.style.display = "none";
+}
+
+// Añadir evento al botón "Comprar ahora" para mostrar el modal de pago o vacío
+document.getElementById("pagar").addEventListener("click", (e) => {
+    e.preventDefault(); // Evitar comportamientos predeterminados
+    mostrarModalPago();
+});
+
+// Añadir evento al botón de cerrar el modal de pago
+document.getElementById("cerrar-pago").addEventListener("click", cerrarModalPago);
+
+// Añadir evento al botón de cerrar el modal de carrito vacío
+document.getElementById("cerrar-vacio").addEventListener("click", cerrarModalCarritoVacio);
+
+// Opcional: Cerrar el modal al hacer clic fuera de él
+window.addEventListener("click", (e) => {
+    const modalPago = document.getElementById("modalPago");
+    const modalCarritoVacio = document.getElementById("modalCarritoVacio");
+
+    if (e.target === modalPago) {
+        cerrarModalPago();
+    }
+
+    if (e.target === modalCarritoVacio) {
+        cerrarModalCarritoVacio();
+    }
+});
+
+/////////////////////
+document.addEventListener("DOMContentLoaded", function () {
+    const botonFlotante = document.getElementById("boton-flotante");
+    const header = document.querySelector("header");
+    const nav = document.querySelector("nav");
+    const imagenCarousel = document.querySelector("#carouselExampleFade .carousel-item.active img");
+    const sections = document.querySelectorAll("section"); // Selecciona todas las secciones
+    const formulario = document.querySelector("form"); // Selecciona el formulario
+    let fondoVioleta = false;
+
+    botonFlotante.addEventListener("click", function () {
+        if (!fondoVioleta) {
+            // Cambia el fondo de la página
+            document.body.style.backgroundImage = "linear-gradient(to right bottom, #542d9f, #4e2489, #461b74, #3d1360, #340c4d, #2d0a44, #26083c, #200533, #1b0530, #17042e, #13032a, #0e0127)";
+            
+            // Cambia el color del header y nav
+            if (header) header.style.backgroundColor = "#1a1a1a";
+            if (nav) nav.style.backgroundColor = "#1a1a1a";
+
+            // Cambia la imagen del carousel
+            if (imagenCarousel) {
+                imagenCarousel.src = "https://wallpapers.com/images/featured/kuromi-ouap9qsclxqc7ngt.jpg";
+                imagenCarousel.style.width = "90%";
+                imagenCarousel.style.height = "500px";
+                imagenCarousel.style.objectFit = "cover";
+            }
+
+            // Cambia el fondo de las secciones
+            sections.forEach((section) => {
+                section.style.backgroundColor = "rgba(34, 34, 34, 0.9)"; // Fondo oscuro con transparencia
+                section.style.color = "#ffffff"; // Cambia el texto a blanco
+            });
+
+            // Cambia el fondo del formulario
+            if (formulario) {
+                formulario.style.background = "rgba(50, 50, 50, 0.9)"; // Fondo más oscuro
+                formulario.style.color = "#ffffff"; // Cambia el texto a blanco
+            }
+
+            // Cambia el botón flotante a color crema con emoji de sol
+            botonFlotante.style.backgroundColor = "#f5deb3";
+            botonFlotante.textContent = "🌞";
+        } else {
+            // Restaura el fondo original
+            document.body.style.backgroundImage = "linear-gradient(to right top, #ff7ee0, #fe96ea, #fdadf2, #fdc2f9, #fed6fe)";
+            
+            // Restaura el color del header y nav
+            if (header) header.style.backgroundColor = "#b069a6";
+            if (nav) nav.style.backgroundColor = "#b069a6";
+
+            // Restaura la imagen original del carousel
+            if (imagenCarousel) {
+                imagenCarousel.src = "https://cdn.shopify.com/s/files/1/1403/8979/files/hello-kitty-sanrio-stationery-1.png?v=1728238573";
+                imagenCarousel.style.width = "100%";
+                imagenCarousel.style.height = "auto";
+                imagenCarousel.style.objectFit = "cover";
+            }
+
+            // Restaura el fondo de las secciones y el color del texto
+            sections.forEach((section) => {
+                section.style.backgroundColor = "rgba(255, 255, 255, 0.8)"; // Fondo semitransparente original
+                section.style.color = "#000000"; // Restaura el texto a negro
+            });
+
+            // Restaura el fondo del formulario y el texto
+            if (formulario) {
+                formulario.style.background = "rgba(255, 255, 255, 0.9)";
+                formulario.style.color = "#000000"; // Restaura el texto a negro
+            }
+
+            // Restaura el botón flotante a su estado inicial
+            botonFlotante.style.backgroundColor = "rgb(83, 18, 115)";
+            botonFlotante.textContent = "🌙";
+        }
+        fondoVioleta = !fondoVioleta;
+    });
 });

@@ -226,6 +226,12 @@ form {
     #Piyamas {
         display: none; /* Oculta estas secciones */
     }
+
+    #boton-flotante { /* Cambié .boton-flotante por #boton-flotante */
+        bottom: 60px !important;
+        right: 2px !important;
+    }
+    
 }
 /* Modal: configuración general */
 #modalProducto {
@@ -315,3 +321,8 @@ form {
     border-radius: 50%; /* Forma circular */
 }
 
+#boton-flotante:hover {
+    background-color: darkred;
+    transform: scale(1.1);
+    transition: all 0.2s ease-in-out;
+}

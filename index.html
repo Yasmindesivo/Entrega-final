@@ -21,19 +21,22 @@
                 <li><a href="#contacto">Contacto</a></li>
                 <li><a href="#registrarse">Comentario</a></li>
                 <li>
-                    <a href="#carrito">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24"><path fill="currentColor" d="M17 18c-1.11 0-2 .89-2 2a2 2 0 0 0 2 2a2 2 0 0 0 2-2a2 2 0 0 0-2-2M1 2v2h2l3.6 7.59l-1.36 2.45c-.15.28-.24.61-.24.96a2 2 0 0 0 2 2h12v-2H7.42a.25.25 0 0 1-.25-.25q0-.075.03-.12L8.1 13h7.45c.75 0 1.41-.42 1.75-1.03l3.58-6.47c.07-.16.12-.33.12-.5a1 1 0 0 0-1-1H5.21l-.94-2M7 18c-1.11 0-2 .89-2 2a2 2 0 0 0 2 2a2 2 0 0 0 2-2a2 2 0 0 0-2-2"/></svg>
-                        <span id="carrito-contador">0</span>
-                    </a>
+                    <div class="carrito-icon" style="position: relative; cursor: pointer; color: white;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24">
+                            <path fill="currentColor" d="M17 18c-1.11 0-2 .89-2 2a2 2 0 0 0 2 2a2 2 0 0 0 2-2a2 2 0 0 0-2-2M1 2v2h2l3.6 7.59l-1.36 2.45c-.15.28-.24.61-.24.96a2 2 0 0 0 2 2h12v-2H7.42a.25.25 0 0 1-.25-.25q0-.075.03-.12L8.1 13h7.45c.75 0 1.41-.42 1.75-1.03l3.58-6.47c.07-.16.12-.33.12-.5a1 1 0 0 0-1-1H5.21l-.94-2M7 18c-1.11 0-2 .89-2 2a2 2 0 0 0 2 2a2 2 0 0 0 2-2a2 2 0 0 0-2-2"/>
+                        </svg>
+                        <span id="carrito-contador" style="background-color: red; color: white; font-size: 14px; font-weight: bold; padding: 2px 6px; border-radius: 50%; position: absolute; top: -5px; right: -10px;">0</span>
+                    </div>
                 </li>
+                
             </ul>
         </nav>
 
         <div class="carrito-icon-pequeno">
-            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24">
+            <svg xmlns="http://www.w3.org/2000/svg" width="45" height="45" viewBox="0 0 24 24">
                 <path fill="currentColor" d="M17 18c-1.11 0-2 .89-2 2a2 2 0 0 0 2 2a2 2 0 0 0 2-2a2 2 0 0 0-2-2M1 2v2h2l3.6 7.59l-1.36 2.45c-.15.28-.24.61-.24.96a2 2 0 0 0 2 2h12v-2H7.42a.25.25 0 0 1-.25-.25q0-.075.03-.12L8.1 13h7.45c.75 0 1.41-.42 1.75-1.03l3.58-6.47c.07-.16.12-.33.12-.5a1 1 0 0 0-1-1H5.21l-.94-2M7 18c-1.11 0-2 .89-2 2a2 2 0 0 0 2 2a2 2 0 0 0 2-2a2 2 0 0 0-2-2"/>
             </svg>
-            <span id="carrito-contador-pequeno" style="background-color: red; color: white; font-size: 9px; font-weight: bold; padding: 2px 6px; border-radius: 50%; position: absolute; top: 10px; right: 10px;">0</span>
+            <span id="carrito-contador-pequeno" style="background-color: red; color: white; font-size: 12px; font-weight: bold; padding: 2px 6px; border-radius: 50%; position: absolute; top: 10px; right: 10px;">0</span>
         </div>
 
     </header>
@@ -130,15 +133,6 @@
             <div class="card-body">
               <h5 class="card-title">Piyama verano My melody</h5>
               <p class="card-text">$20000</p>
-              <a href="#" class="btn btn-primary">Comprar</a>
-            </div>
-        </div>
-
-        <div class="card" style="width: 18rem;">
-            <img src="https://ae-pic-a1.aliexpress-media.com/kf/S182bb1fd31554005804ca86b6371ffe3r/Sanrio-Pijama-de-dibujos-animados-My-Melody-para-mujer-conjunto-de-dos-piezas-terciopelo-Coral-traje.jpg_640x640Q90.jpg_.webp" class="card-img-top" alt="...">
-            <div class="card-body">
-              <h5 class="card-title">Piyama invierno My melody</h5>
-              <p class="card-text">$22000</p>
               <a href="#" class="btn btn-primary">Comprar</a>
             </div>
         </div>
@@ -399,7 +393,6 @@
                 <!-- Slide 2 -->
                 <div class="carousel-item">
                     <div class="d-flex justify-content-center gap-3">
-                        </div>
                         <div class="card" style="width: 18rem;">
                             <img src="https://http2.mlstatic.com/D_NQ_NP_947062-MLA76917034136_062024-O.webp" class="card-img-top" alt="...">
                             <div class="card-body">
@@ -431,7 +424,7 @@
                             </div>
                         </div>
                         <div class="card" style="width: 18rem;">
-                            <img src="https://ae-pic-a1.aliexpress-media.com/kf/S182bb1fd31554005804ca86b6371ffe3r/Sanrio-Pijama-de-dibujos-animados-My-Melody-para-mujer-conjunto-de-dos-piezas-terciopelo-Coral-traje.jpg_640x640Q90.jpg_.webp" class="card-img-top" alt="...">
+                            <img src="https://i5.walmartimages.com/asr/580774bd-c1c7-4c1f-98ba-92c88a5e8cfe.b23db392cbfb8b1733d40637007c91b0.jpeg?odnHeight=612&odnWidth=612&odnBg=FFFFFF" class="card-img-top" alt="...">
                             <div class="card-body">
                                 <h5 class="card-title">Piyama invierno My melody</h5>
                                 <p class="card-text">$22000</p>
@@ -477,7 +470,7 @@
             <form action="https://formspree.io/f/your-endpoint" method="POST">
                 <fieldset>
                     <legend>
-                        <h2>Registro de usuario - Ingrese sus datos</h2>
+                        <h2>Envie su comentario - Ingrese sus datos</h2>
                     </legend>
                     <p>
                         <label for="name">Nombre/s</label>
@@ -518,8 +511,61 @@
         </div>
     </div>
     
+    <div id="modalCarrito" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 1000;">
+        <div style="background: white; margin: 10% auto; padding: 20px; width: 90%; max-width: 600px; border-radius: 10px; position: relative;">
+            <h2>Carrito de Compras</h2>
+            <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Precio</th>
+                        <th>Cantidad</th>
+                        <th>Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-carrito"></tbody>
+            </table>
+            <h3>Total: <span id="total-carrito">$0</span></h3>
+            <button id="vaciar-carrito" style="background-color: red; color: white; padding: 10px 20px; border: none; border-radius: 5px;">Vaciar Carrito</button>
+            <button id="cerrar-carrito" style="background-color: grey; color: white; padding: 10px 20px; border: none; border-radius: 5px;">Cerrar</button>
+            <button id="pagar" style="background-color: rgb(98, 196, 66); color: white; padding: 10px 20px; border: none; border-radius: 5px;">Comprar ahora</button>
+        </div>
+    </div>
+    
+    <div id="modalPago" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 1000;">
+        <div style="background: white; margin: 10% auto; padding: 20px; width: 90%; max-width: 500px; border-radius: 10px; position: relative;">
+            <h2>Finalizar Compra</h2>
+            <p>Total a pagar: <span id="total-pago">$0</span></p>
+            <h3>Seleccione un método de pago:</h3>
+            <ul>
+                <li><button style="background-color: rgb(194, 116, 235); color: white; padding: 5px 20px; border: none; border-radius: 5px; margin-bottom: 2%;">Tarjeta de crédito</button></li>
+                <li><button style="background-color: rgb(208, 95, 180); color: white; padding: 5px 20px; border: none; border-radius: 5px;margin-bottom: 2%;">Tarjeta de débito</button></li>
+                <li><button style="background-color: rgb(144, 216, 229); color: white; padding: 5px 20px; border: none; border-radius: 5px;">Transferencia bancaria</button></li>
+            </ul>
+            <button id="cerrar-pago" style="background-color: grey; color: white; padding: 10px 20px; border: none; border-radius: 5px;">Cerrar</button>
+        </div>
+    </div>
+    
+
+    <div id="modalCarritoVacio" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 1000;">
+        <div style="background: white; margin: 10% auto; padding: 20px; width: 90%; max-width: 400px; border-radius: 10px; position: relative; text-align: center;">
+            <h2>Ups, el carrito está vacío</h2>
+            <p>Agrega productos al carrito antes de continuar con la compra.</p>
+            <button id="cerrar-vacio" style="background-color: grey; color: white; padding: 10px 20px; border: none; border-radius: 5px;">Cerrar</button>
+        </div>
+    </div>
+
+
+    <button id="boton-flotante" style="position: fixed; bottom: 20px; right: 20px; width: 60px; height: 60px; background-color: rgb(83, 18, 115); color: white; border: none; border-radius: 50%; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); cursor: pointer; z-index: 1000;">
+        🌙
+    </button>
+    
+    
 
     <script src="js/main.js"></script>
+
+
+    
 
 
 </body>
